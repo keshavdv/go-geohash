@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-type BoundingBox struct {
+type boundingBox struct {
 	MaxLatitude  float64
 	MinLatitude  float64
 	MaxLongitude float64
@@ -12,7 +12,7 @@ type BoundingBox struct {
 }
 
 func EncodeWithPrecision(lat, lng float64, precision int) (hash uint64, err error) {
-	bounds := BoundingBox{MaxLatitude: 90, MaxLongitude: 180, MinLatitude: -90, MinLongitude: -180}
+	bounds := boundingBox{MaxLatitude: 90, MaxLongitude: 180, MinLatitude: -90, MinLongitude: -180}
 
 	if lat < bounds.MinLatitude || lat > bounds.MaxLatitude || lng < bounds.MinLongitude || lng > bounds.MaxLongitude {
 		err = errors.New("Coordinate out of bounds")
@@ -51,12 +51,12 @@ func Encode(lat, lng float64) (hash uint64, err error) {
 
 func DecodeWithPrecision(hash float64, precision int) (lat float64, lng float64) {
 	intHash := uint64(hash)
-	bounds := BoundingBox{MaxLatitude: 90, MaxLongitude: 180, MinLatitude: -90, MinLongitude: -180}
+	bounds := boundingBox{MaxLatitude: 90, MaxLongitude: 180, MinLatitude: -90, MinLongitude: -180}
 	var lat_bit, lng_bit uint64
 
 	for i := 0; i < precision; i++ {
-		lat_bit = GetBit(intHash, uint8((precision-i)*2-1))
-		lng_bit = GetBit(intHash, uint8((precision-i)*2-2))
+		lat_bit = getBit(intHash, uint8((precision-i)*2-1))
+		lng_bit = getBit(intHash, uint8((precision-i)*2-2))
 
 		if lat_bit == 0 {
 			bounds.MaxLatitude = (bounds.MaxLatitude + bounds.MinLatitude) / 2
@@ -77,6 +77,6 @@ func Decode(point float64) (lat float64, lng float64) {
 	return DecodeWithPrecision(point, 26)
 }
 
-func GetBit(bits uint64, pos uint8) uint64 {
+func getBit(bits uint64, pos uint8) uint64 {
 	return (bits >> pos) & 0x01
 }
