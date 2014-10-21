@@ -11,7 +11,7 @@ type BoundingBox struct {
 	MinLongitude float64
 }
 
-func EncodeWithPrecision(lat, lng float64, precision int) (point float64, err error) {
+func EncodeWithPrecision(lat, lng float64, precision int) (hash uint64, err error) {
 	bounds := BoundingBox{MaxLatitude: 90, MaxLongitude: 180, MinLatitude: -90, MinLongitude: -180}
 
 	if lat < bounds.MinLatitude || lat > bounds.MaxLatitude || lng < bounds.MinLongitude || lng > bounds.MaxLongitude {
@@ -19,7 +19,6 @@ func EncodeWithPrecision(lat, lng float64, precision int) (point float64, err er
 		return
 	}
 
-	var hash uint64
 	var lat_bit, lng_bit uint64
 	for i := 0; i < precision; i++ {
 		if bounds.MaxLatitude-lat >= lat-bounds.MinLatitude {
@@ -43,10 +42,10 @@ func EncodeWithPrecision(lat, lng float64, precision int) (point float64, err er
 		hash += lng_bit
 	}
 
-	return float64(hash), nil
+	return
 }
 
-func Encode(lat, lng float64) (point float64, err error) {
+func Encode(lat, lng float64) (hash uint64, err error) {
 	return EncodeWithPrecision(lat, lng, 26)
 }
 

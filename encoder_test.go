@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./encoder"
+	"github.com/keshavdv/go-geohash/encoder"
 	"log"
 	"testing"
 )
@@ -15,7 +15,7 @@ func TestEncode(t *testing.T) {
 	}
 	log.Print(geo)
 
-	lat, lng := encoder.Decode(geo)
+	lat, lng := encoder.Decode(float64(geo))
 	log.Print(lat)
 	log.Print(lng)
 
@@ -26,7 +26,7 @@ func TestEncode(t *testing.T) {
 	}
 	log.Print(geo)
 
-	lat, lng = encoder.Decode(geo)
+	lat, lng = encoder.Decode(float64(geo))
 	log.Print(lat)
 	log.Print(lng)
 }
